@@ -1,2 +1,2 @@
 # backend
-Backend for pjoect
+Backend for project
