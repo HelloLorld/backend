@@ -24,8 +24,7 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        List<User> list = repository.findAll();
-        return list;
+        return repository.findAll();
     }
 
     @GetMapping("/users/{id}")
@@ -38,7 +37,11 @@ public class UserController {
 
     @PostMapping("/users")
     public User saveUser(@RequestBody User user) {
-        return repository.save(user);
+        Optional<User> foundUser = repository.findByEmail(user.getEmail());
+        if (!foundUser.isPresent()) {
+            return repository.save(user);
+        }
+        else return null;
     }
 
     @PostMapping("/login")
