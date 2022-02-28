@@ -67,11 +67,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Integer id) throws ResourceNotFound {
         Optional<User> user = repository.findById(id);
-        if (!user.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("User not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!user.isPresent()) throw new ResourceNotFound("User not found for id: " + id);
         else repository.delete(user.get());
 
         Map<String, Boolean> response = new HashMap<>();
@@ -80,10 +78,9 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<Object> putOfUser(@PathVariable(value = "id") Integer id, @RequestBody User userChanged) {
+    public ResponseEntity<Object> putOfUser(@PathVariable(value = "id") Integer id, @RequestBody User userChanged) throws ResourceNotFound {
         Optional<User> user = repository.findById(id);
-        if (!user.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("User not found for id: " + id).getMessage(), HttpStatus.NOT_FOUND);
+        if (!user.isPresent()) throw new ResourceNotFound("User not found for id: " + id);
         else {
             userChanged.setId(user.get().getId());
             repository.save(userChanged);
@@ -94,12 +91,10 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<Object> patchOfUser(@PathVariable(value = "id") Integer id, @RequestBody User userChanged) {
+    public ResponseEntity<Object> patchOfUser(@PathVariable(value = "id") Integer id, @RequestBody User userChanged) throws ResourceNotFound {
         Optional<User> user = repository.findById(id);
         boolean needChange;
-        if (!user.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("User not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!user.isPresent()) throw new ResourceNotFound("User not found for id: " + id);
         else {
             userChanged.setId(user.get().getId());
             needChange = service.checkNeedUpdate(user.get(), userChanged);

@@ -45,11 +45,9 @@ public class TourController {
 
 
     @DeleteMapping("/tours/{id}")
-    public ResponseEntity<Object> deleteTour(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteTour(@PathVariable(value = "id") Integer id) throws ResourceNotFound {
         Optional<Tour> tour = repository.findById(id);
-        if (!tour.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Tour not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!tour.isPresent()) throw new ResourceNotFound("Tour not found for id: " + id);
         else repository.delete(tour.get());
 
         Map<String, Boolean> response = new HashMap<>();
@@ -58,10 +56,9 @@ public class TourController {
     }
 
     @PutMapping("/tours/{id}")
-    public ResponseEntity<Object> putOfTour(@PathVariable(value = "id") Integer id, @RequestBody Tour tourChanged) {
+    public ResponseEntity<Object> putOfTour(@PathVariable(value = "id") Integer id, @RequestBody Tour tourChanged) throws ResourceNotFound {
         Optional<Tour> tour = repository.findById(id);
-        if (!tour.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Tour not found for id: " + id).getMessage(), HttpStatus.NOT_FOUND);
+        if (!tour.isPresent()) throw new ResourceNotFound("Tour not found for id: " + id);
         else {
             tourChanged.setId(tour.get().getId());
             repository.save(tourChanged);
@@ -72,12 +69,10 @@ public class TourController {
     }
 
     @PatchMapping("/tours/{id}")
-    public ResponseEntity<Object> patchOfTour(@PathVariable(value = "id") Integer id, @RequestBody Tour tourChanged) {
+    public ResponseEntity<Object> patchOfTour(@PathVariable(value = "id") Integer id, @RequestBody Tour tourChanged) throws ResourceNotFound {
         Optional<Tour> tour = repository.findById(id);
         boolean needChange;
-        if (!tour.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Tour not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!tour.isPresent()) throw new ResourceNotFound("Tour not found for id: " + id);
         else {  
             tourChanged.setId(tour.get().getId());
             needChange = service.checkNeedUpdate(tour.get(), tourChanged);

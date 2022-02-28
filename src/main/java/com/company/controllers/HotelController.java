@@ -42,11 +42,9 @@ public class HotelController {
 
 
     @DeleteMapping("/hotels/{id}")
-    public ResponseEntity<Object> deleteHotel(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteHotel(@PathVariable(value = "id") Integer id) throws ResourceNotFound {
         Optional<Hotel> hotel = repository.findById(id);
-        if (!hotel.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Hotel not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!hotel.isPresent()) throw new ResourceNotFound("Hotel not found for id: " + id);
         else repository.delete(hotel.get());
 
         Map<String, Boolean> response = new HashMap<>();
@@ -55,10 +53,9 @@ public class HotelController {
     }
 
     @PutMapping("/hotels/{id}")
-    public ResponseEntity<Object> putOfHotel(@PathVariable(value = "id") Integer id, @RequestBody Hotel hotelChanged) {
+    public ResponseEntity<Object> putOfHotel(@PathVariable(value = "id") Integer id, @RequestBody Hotel hotelChanged) throws ResourceNotFound {
         Optional<Hotel> hotel = repository.findById(id);
-        if (!hotel.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Hotel not found for id: " + id).getMessage(), HttpStatus.NOT_FOUND);
+        if (!hotel.isPresent()) throw new ResourceNotFound("Hotel not found for id: " + id);
         else {
             hotelChanged.setId(hotel.get().getId());
             repository.save(hotelChanged);
@@ -69,12 +66,10 @@ public class HotelController {
     }
 
     @PatchMapping("/hotels/{id}")
-    public ResponseEntity<Object> patchOfHotel(@PathVariable(value = "id") Integer id, @RequestBody Hotel hotelChanged) {
+    public ResponseEntity<Object> patchOfHotel(@PathVariable(value = "id") Integer id, @RequestBody Hotel hotelChanged) throws ResourceNotFound {
         Optional<Hotel> hotel = repository.findById(id);
         boolean needChange;
-        if (!hotel.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Hotel not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!hotel.isPresent()) throw new ResourceNotFound("Hotel not found for id: " + id);
         else {
             hotelChanged.setId(hotel.get().getId());
             needChange = service.checkNeedUpdate(hotel.get(), hotelChanged);

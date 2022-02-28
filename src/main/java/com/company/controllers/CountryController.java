@@ -42,11 +42,9 @@ public class CountryController {
 
 
     @DeleteMapping("/countries/{id}")
-    public ResponseEntity<Object> deleteCountry(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteCountry(@PathVariable(value = "id") Integer id) throws ResourceNotFound {
         Optional<Country> country = repository.findById(id);
-        if (!country.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Country not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!country.isPresent()) throw new ResourceNotFound("Country not found for id: " + id);
         else repository.delete(country.get());
 
         Map<String, Boolean> response = new HashMap<>();
@@ -55,10 +53,9 @@ public class CountryController {
     }
 
     @PutMapping("/countries/{id}")
-    public ResponseEntity<Object> putOfCountry(@PathVariable(value = "id") Integer id, @RequestBody Country countryChanged) {
+    public ResponseEntity<Object> putOfCountry(@PathVariable(value = "id") Integer id, @RequestBody Country countryChanged) throws ResourceNotFound {
         Optional<Country> country = repository.findById(id);
-        if (!country.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Country not found for id: " + id).getMessage(), HttpStatus.NOT_FOUND);
+        if (!country.isPresent()) throw new ResourceNotFound("Country not found for id: " + id);
         else {
             countryChanged.setId(country.get().getId());
             repository.save(countryChanged);
@@ -69,12 +66,10 @@ public class CountryController {
     }
 
     @PatchMapping("/countries/{id}")
-    public ResponseEntity<Object> patchOfCountry(@PathVariable(value = "id") Integer id, @RequestBody Country countryChanged) {
+    public ResponseEntity<Object> patchOfCountry(@PathVariable(value = "id") Integer id, @RequestBody Country countryChanged) throws ResourceNotFound {
         Optional<Country> country = repository.findById(id);
         boolean needChange;
-        if (!country.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Country not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!country.isPresent()) throw new ResourceNotFound("Country not found for id: " + id);
         else {
             countryChanged.setId(country.get().getId());
             needChange = service.checkNeedUpdate(country.get(), countryChanged);

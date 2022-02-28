@@ -42,11 +42,9 @@ public class CityController {
 
 
     @DeleteMapping("/cities/{id}")
-    public ResponseEntity<Object> deleteCity(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteCity(@PathVariable(value = "id") Integer id) throws ResourceNotFound {
         Optional<City> city = repository.findById(id);
-        if (!city.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("City not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!city.isPresent()) throw new ResourceNotFound("City not found for id: " + id);
         else repository.delete(city.get());
 
         Map<String, Boolean> response = new HashMap<>();
@@ -55,10 +53,9 @@ public class CityController {
     }
 
     @PutMapping("/cities/{id}")
-    public ResponseEntity<Object> putOfCity(@PathVariable(value = "id") Integer id, @RequestBody City cityChanged) {
+    public ResponseEntity<Object> putOfCity(@PathVariable(value = "id") Integer id, @RequestBody City cityChanged) throws ResourceNotFound {
         Optional<City> city = repository.findById(id);
-        if (!city.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("City not found for id: " + id).getMessage(), HttpStatus.NOT_FOUND);
+        if (!city.isPresent()) throw new ResourceNotFound("City not found for id: " + id);
         else {
             cityChanged.setId(city.get().getId());
             repository.save(cityChanged);
@@ -69,12 +66,10 @@ public class CityController {
     }
 
     @PatchMapping("/cities/{id}")
-    public ResponseEntity<Object> patchOfCity(@PathVariable(value = "id") Integer id, @RequestBody City cityChanged) {
+    public ResponseEntity<Object> patchOfCity(@PathVariable(value = "id") Integer id, @RequestBody City cityChanged) throws ResourceNotFound {
         Optional<City> city = repository.findById(id);
         boolean needChange;
-        if (!city.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("City not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!city.isPresent()) throw new ResourceNotFound("City not found for id: " + id);
         else {
             cityChanged.setId(city.get().getId());
             needChange = service.checkNeedUpdate(city.get(), cityChanged);

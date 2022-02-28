@@ -42,11 +42,9 @@ public class TypeController {
 
 
     @DeleteMapping("/types/{id}")
-    public ResponseEntity<Object> deleteType(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Object> deleteType(@PathVariable(value = "id") Integer id) throws ResourceNotFound {
         Optional<Type> type = repository.findById(id);
-        if (!type.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Type not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!type.isPresent()) throw new ResourceNotFound("Type not found for id: " + id);
         else repository.delete(type.get());
 
         Map<String, Boolean> response = new HashMap<>();
@@ -55,10 +53,9 @@ public class TypeController {
     }
 
     @PutMapping("/types/{id}")
-    public ResponseEntity<Object> putOfType(@PathVariable(value = "id") Integer id, @RequestBody Type typeChanged) {
+    public ResponseEntity<Object> putOfType(@PathVariable(value = "id") Integer id, @RequestBody Type typeChanged) throws ResourceNotFound {
         Optional<Type> type = repository.findById(id);
-        if (!type.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Type not found for id: " + id).getMessage(), HttpStatus.NOT_FOUND);
+        if (!type.isPresent()) throw new ResourceNotFound("Type not found for id: " + id);
         else {
             typeChanged.setId(type.get().getId());
             repository.save(typeChanged);
@@ -69,12 +66,10 @@ public class TypeController {
     }
 
     @PatchMapping("/types/{id}")
-    public ResponseEntity<Object> patchOfType(@PathVariable(value = "id") Integer id, @RequestBody Type typeChanged) {
+    public ResponseEntity<Object> patchOfType(@PathVariable(value = "id") Integer id, @RequestBody Type typeChanged) throws ResourceNotFound {
         Optional<Type> type = repository.findById(id);
         boolean needChange;
-        if (!type.isPresent()) return
-                new ResponseEntity<>(new ResourceNotFound("Type not found for id: " + id).getMessage()
-                        , new HttpHeaders(), HttpStatus.NOT_FOUND);
+        if (!type.isPresent()) throw new ResourceNotFound("Type not found for id: " + id);
         else {
             typeChanged.setId(type.get().getId());
             needChange = service.checkNeedUpdate(type.get(), typeChanged);
