@@ -40,7 +40,7 @@ public class HotelController {
         return repository.save(hotel);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
+
     @DeleteMapping("/hotels/{id}")
     public ResponseEntity<Object> deleteHotel(@PathVariable(value = "id") Integer id) {
         Optional<Hotel> hotel = repository.findById(id);
