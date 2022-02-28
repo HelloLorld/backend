@@ -43,7 +43,7 @@ public class TourController {
         return repository.save(tour);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
+
     @DeleteMapping("/tours/{id}")
     public ResponseEntity<Object> deleteTour(@PathVariable(value = "id") Integer id) {
         Optional<Tour> tour = repository.findById(id);

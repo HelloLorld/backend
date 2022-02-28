@@ -40,7 +40,7 @@ public class TypeController {
         return repository.save(type);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
+
     @DeleteMapping("/types/{id}")
     public ResponseEntity<Object> deleteType(@PathVariable(value = "id") Integer id) {
         Optional<Type> type = repository.findById(id);

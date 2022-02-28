@@ -40,7 +40,7 @@ public class CityController {
         return repository.save(city);
     }
 
-    @ExceptionHandler(ResourceNotFound.class)
+
     @DeleteMapping("/cities/{id}")
     public ResponseEntity<Object> deleteCity(@PathVariable(value = "id") Integer id) {
         Optional<City> city = repository.findById(id);
