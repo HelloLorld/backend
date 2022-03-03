@@ -76,12 +76,10 @@ public class HotelController {
             if (needChange) repository.save(hotelChanged);
         }
 
-        Map<String, Boolean> response = new HashMap<>();
         if (needChange) {
-            response.put("changed", true);
+            return new ResponseEntity<>(hotelChanged, HttpStatus.OK);
         } else {
-            response.put("changed", false);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

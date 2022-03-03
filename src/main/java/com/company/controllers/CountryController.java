@@ -76,12 +76,10 @@ public class CountryController {
             if (needChange) repository.save(countryChanged);
         }
 
-        Map<String, Boolean> response = new HashMap<>();
         if (needChange) {
-            response.put("changed", true);
+            return new ResponseEntity<>(countryChanged, HttpStatus.OK);
         } else {
-            response.put("changed", false);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -49,7 +49,6 @@ public class UserController {
     @PostMapping("/login")
     public Map<String, Integer> auth(@RequestBody Map<String, String> loginInfo) {
         Map<String, Integer> respInfo = new HashMap<>();
-        System.out.println("reqInfo: " + loginInfo.get("password")  + "  " + loginInfo.get("email"));
         Optional<User> user = repository.findByEmail(loginInfo.get("email"));
         if (user.isPresent()) {
             if (user.get().getPassword().equals(loginInfo.get("password"))) {

@@ -76,12 +76,10 @@ public class CityController {
             if (needChange) repository.save(cityChanged);
         }
 
-        Map<String, Boolean> response = new HashMap<>();
         if (needChange) {
-            response.put("changed", true);
+            return new ResponseEntity<>(cityChanged, HttpStatus.OK);
         } else {
-            response.put("changed", false);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -5,7 +5,6 @@ import com.company.models.Type;
 import com.company.repository.TypeRepository;
 import com.company.services.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,12 +75,10 @@ public class TypeController {
             if (needChange) repository.save(typeChanged);
         }
 
-        Map<String, Boolean> response = new HashMap<>();
         if (needChange) {
-            response.put("changed", true);
+            return new ResponseEntity<>(typeChanged, HttpStatus.OK);
         } else {
-            response.put("changed", false);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
