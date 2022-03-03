@@ -5,13 +5,10 @@ import com.company.models.User;
 import com.company.repository.UserRepository;
 import com.company.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
-import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,12 +97,10 @@ public class UserController {
             if (needChange) repository.save(userChanged);
         }
 
-        Map<String, Boolean> response = new HashMap<>();
         if (needChange) {
-            response.put("changed", true);
+            return new ResponseEntity<>(userChanged, HttpStatus.OK);
         } else {
-            response.put("changed", false);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

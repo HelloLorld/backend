@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "tours")
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Tour {
+public class Tour implements Comparable<Tour> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tour_id")
@@ -21,4 +21,10 @@ public class Tour {
     @ManyToOne
     @JoinColumn(name = "hotel", referencedColumnName = "hotel_id")
     private Hotel hotel;
+
+    @Override
+    public int compareTo(Tour o) {
+        if (this.equals(o)) return 1;
+        else return -1;
+    }
 }
