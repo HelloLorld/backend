@@ -24,7 +24,8 @@ public class Tour implements Comparable<Tour> {
 
     @Override
     public int compareTo(Tour o) {
-        if (this.equals(o)) return 1;
-        else return -1;
+        if (this.id > o.getId()) return 1;
+        else if (this.id < o.getId()) return -1;
+        return 0;
     }
 }
